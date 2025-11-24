@@ -12,7 +12,7 @@
 
 NAME = philo
 
-SRCS = main.c init.c routine.c monitor.c philo_actions.c philo_fork_utils.c utils.c
+SRCS = main.c init.c routine.c monitor.c philo_actions.c philo_fork_utils.c utils.c cleanup.c
 
 OBJS = $(SRCS:.c=.o)
 

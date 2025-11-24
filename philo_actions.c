@@ -21,9 +21,11 @@ void	release_forks(t_philo *philo)
 void	eat(t_philo *philo)
 {
 	print_status(philo, "is eating");
-	ft_usleep(philo->data->time_to_eat);
 	pthread_mutex_lock(&philo->data->death_mutex);
 	philo->last_meal_time = get_time();
+	pthread_mutex_unlock(&philo->data->death_mutex);
+	ft_usleep(philo->data->time_to_eat);
+	pthread_mutex_lock(&philo->data->death_mutex);
 	philo->meals_eaten++;
 	if (philo->data->num_meals != -1
 		&& philo->meals_eaten >= philo->data->num_meals)

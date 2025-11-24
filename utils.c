@@ -12,6 +12,33 @@
 
 #include "philosopher.h"
 
+int	ft_atoi(const char *str)
+{
+	int			i;
+	int			sign;
+	long long	result;
+
+	i = 0;
+	sign = 1;
+	result = 0;
+	while (str[i] == ' ' || (str[i] >= '\t' && str[i] <= '\r'))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		if (result > 2147483647)
+			return (-1);
+		i++;
+	}
+	return ((int)(result * sign));
+}
+
 long long	get_time(void)
 {
 	struct timeval	v;
@@ -23,17 +50,15 @@ long long	get_time(void)
 void	print_status(t_philo *philo, char *status)
 {
 	long long	time;
-	int			is_dead;
 
-	pthread_mutex_lock(&philo->data->death_mutex);
-	is_dead = philo->data->is_dead;
-	if (!is_dead)
-		time = get_time() - philo->data->start_time;
-	pthread_mutex_unlock(&philo->data->death_mutex);
-	if (is_dead)
-		return ;
 	pthread_mutex_lock(&philo->data->print_mutex);
-	printf("%lld %d %s\n", time, philo->id, status);
+	pthread_mutex_lock(&philo->data->death_mutex);
+	if (!philo->data->is_dead)
+	{
+		time = get_time() - philo->data->start_time;
+		printf("%lld %d %s\n", time, philo->id, status);
+	}
+	pthread_mutex_unlock(&philo->data->death_mutex);
 	pthread_mutex_unlock(&philo->data->print_mutex);
 }
 
@@ -46,21 +71,4 @@ void	ft_usleep(long long time)
 		usleep(50);
 }
 
-void	cleanup_mutexes(t_data *data)
-{
-	int	i;
 
-	if (data->forks)
-	{
-		i = 0;
-		while (i < data->num_philos)
-		{
-			pthread_mutex_destroy(&data->forks[i]);
-			i++;
-		}
-		free(data->forks);
-		data->forks = NULL;
-	}
-	pthread_mutex_destroy(&data->print_mutex);
-	pthread_mutex_destroy(&data->death_mutex);
-}

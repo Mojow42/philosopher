@@ -12,43 +12,48 @@
 
 #include "philosopher.h"
 
-static int	validate_args(int argc, char **argv)
+static int	validate_args(int argc, char **argv, int *args)
 {
 	int	i;
 	int	j;
+	int	val;
 
 	if (argc < 5 || argc > 6)
-		return (1);
+		return (0);
 	i = 1;
 	while (i < argc)
 	{
 		if (!argv[i][0])
-			return (1);
+			return (0);
 		j = 0;
 		while (argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-				return (1);
+				return (0);
 			j++;
 		}
-		if (atoi(argv[i]) <= 0 || (i == 1 && atoi(argv[i]) > 200))
-			return (1);
+		val = ft_atoi(argv[i]);
+		args[i - 1] = val;
+		if (val <= 0 || (i == 1 && val > 200))
+			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 int	init_data(t_data *data, int argc, char **argv)
 {
-	if (validate_args(argc, argv))
+	int	args[5];
+
+	if (!validate_args(argc, argv, args))
 		return (1);
-	data->num_philos = atoi(argv[1]);
-	data->time_to_die = atoi(argv[2]);
-	data->time_to_eat = atoi(argv[3]);
-	data->time_to_sleep = atoi(argv[4]);
+	data->num_philos = args[0];
+	data->time_to_die = args[1];
+	data->time_to_eat = args[2];
+	data->time_to_sleep = args[3];
 	data->num_meals = -1;
 	if (argc == 6)
-		data->num_meals = atoi(argv[5]);
+		data->num_meals = args[4];
 	data->is_dead = 0;
 	data->start_time = get_time();
 	data->philos = malloc(sizeof(t_philo) * data->num_philos);
@@ -71,7 +76,7 @@ static int	init_forks(t_data *data)
 		if (pthread_mutex_init(&data->forks[i], NULL))
 		{
 			data->num_philos = i;
-			cleanup_mutexes(data);
+			cleanup_forks(data);
 			return (1);
 		}
 		i++;
@@ -85,13 +90,13 @@ int	init_mutexes(t_data *data)
 		return (1);
 	if (pthread_mutex_init(&data->print_mutex, NULL))
 	{
-		cleanup_mutexes(data);
+		cleanup_forks(data);
 		return (1);
 	}
 	if (pthread_mutex_init(&data->death_mutex, NULL))
 	{
 		pthread_mutex_destroy(&data->print_mutex);
-		cleanup_mutexes(data);
+		cleanup_forks(data);
 		return (1);
 	}
 	return (0);

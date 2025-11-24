@@ -33,12 +33,7 @@ static int	init_simulation_data(t_data *data, int argc, char **argv)
 			free(data->philos);
 		return (1);
 	}
-	if (init_philos(data))
-	{
-		printf("Error: philosopher initialization failed\n");
-		cleanup(data);
-		return (1);
-	}
+	init_philos(data);
 	return (0);
 }
 
@@ -65,26 +60,19 @@ static int	create_threads(t_data *data, pthread_t *monitor)
 	return (0);
 }
 
-static int	setup_sim(t_data *data, int argc, char **argv, pthread_t *monitor)
-{
-	if (init_simulation_data(data, argc, argv))
-		return (1);
-	if (create_threads(data, monitor))
-	{
-		cleanup(data);
-		return (1);
-	}
-	return (0);
-}
-
 int	main(int argc, char **argv)
 {
 	t_data		data;
 	pthread_t	monitor;
 	int			i;
 
-	if (setup_sim(&data, argc, argv, &monitor))
+	if (init_simulation_data(&data, argc, argv))
 		return (1);
+	if (create_threads(&data, &monitor))
+	{
+		cleanup(&data);
+		return (1);
+	}
 	i = 0;
 	while (i < data.num_philos)
 	{

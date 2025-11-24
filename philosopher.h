@@ -16,7 +16,6 @@
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
 
@@ -48,10 +47,12 @@ typedef struct s_data
 }					t_data;
 
 // utils.c
+int					ft_atoi(const char *str);
 long long			get_time(void);
 void				print_status(t_philo *philo, char *status);
 void				ft_usleep(long long time);
 void				cleanup_mutexes(t_data *data);
+void				cleanup_forks(t_data *data);
 
 // init.c
 int					init_data(t_data *data, int argc, char **argv);
