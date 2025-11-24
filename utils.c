@@ -70,5 +70,3 @@ void	ft_usleep(long long time)
 	while (get_time() < target)
 		usleep(50);
 }
-
-

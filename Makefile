@@ -6,7 +6,7 @@
 #    By: vpoelman <vpoelman@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/11 15:12:29 by vpoelman          #+#    #+#              #
-#    Updated: 2025/09/11 15:12:29 by vpoelman         ###   ########.fr        #
+#    Updated: 2025/11/24 23:34:23 by vpoelman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRCS = main.c init.c routine.c monitor.c philo_actions.c philo_fork_utils.c util
 
 OBJS = $(SRCS:.c=.o)
 
-CC = gcc
+CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -pthread
 
