@@ -34,7 +34,7 @@ static int	validate_args(int argc, char **argv, int *args)
 		}
 		val = ft_atoi(argv[i]);
 		args[i - 1] = val;
-		if (val <= 0 || (i == 1 && val > 200))
+		if (val <= 0)
 			return (0);
 		i++;
 	}

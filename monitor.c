@@ -6,7 +6,7 @@
 /*   By: vpoelman <vpoelman@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 23:41:25 by vpoelman          #+#    #+#             */
-/*   Updated: 2025/11/24 23:41:30 by vpoelman         ###   ########.fr       */
+/*   Updated: 2025/11/25 01:40:21 by vpoelman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,14 @@ static int	check_all_philos_finished(t_data *data)
 static int	check_one_philo(t_data *data, int i, long long time)
 {
 	pthread_mutex_lock(&data->death_mutex);
-	if (data->is_dead)
-	{
-		pthread_mutex_unlock(&data->death_mutex);
-		return (0);
-	}
 	if (!data->philos[i].finished && time
 		- data->philos[i].last_meal_time > data->time_to_die)
 	{
 		data->is_dead = 1;
-		pthread_mutex_unlock(&data->death_mutex);
 		pthread_mutex_lock(&data->print_mutex);
 		printf("%lld %d died\n", time - data->start_time, data->philos[i].id);
 		pthread_mutex_unlock(&data->print_mutex);
+		pthread_mutex_unlock(&data->death_mutex);
 		return (1);
 	}
 	pthread_mutex_unlock(&data->death_mutex);
