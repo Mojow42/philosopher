@@ -12,6 +12,18 @@
 
 #include "philosopher.h"
 
+static int	should_stop(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->data->death_mutex);
+	if (philo->data->is_dead || philo->finished)
+	{
+		pthread_mutex_unlock(&philo->data->death_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->data->death_mutex);
+	return (0);
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
@@ -21,17 +33,14 @@ void	*philo_routine(void *arg)
 		ft_usleep(1);
 	while (1)
 	{
-		pthread_mutex_lock(&philo->data->death_mutex);
-		if (philo->data->is_dead || philo->finished)
-		{
-			pthread_mutex_unlock(&philo->data->death_mutex);
+		if (should_stop(philo))
 			break ;
-		}
-		pthread_mutex_unlock(&philo->data->death_mutex);
 		if (take_forks(philo))
 			break ;
 		eat(philo);
 		release_forks(philo);
+		if (should_stop(philo))
+			return (NULL);
 		print_status(philo, "is sleeping");
 		ft_usleep(philo->data->time_to_sleep);
 		print_status(philo, "is thinking");

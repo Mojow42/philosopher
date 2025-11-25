@@ -6,7 +6,7 @@
 /*   By: vpoelman <vpoelman@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 23:41:25 by vpoelman          #+#    #+#             */
-/*   Updated: 2025/11/25 01:40:21 by vpoelman         ###   ########.fr       */
+/*   Updated: 2025/11/25 14:23:08 by vpoelman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static int	check_all_philos_finished(t_data *data)
 		}
 		i++;
 	}
+	if (i == data->num_philos)
+		data->is_dead = 1;
 	pthread_mutex_unlock(&data->death_mutex);
 	return (all_eaten);
 }
@@ -78,12 +80,7 @@ void	*monitor_routine(void *arg)
 	while (1)
 	{
 		if (check_all_philos_finished(data))
-		{
-			pthread_mutex_lock(&data->death_mutex);
-			data->is_dead = 1;
-			pthread_mutex_unlock(&data->death_mutex);
 			return (NULL);
-		}
 		if (check_philo_death(data))
 			return (NULL);
 		usleep(1000);

@@ -6,7 +6,7 @@
 #    By: vpoelman <vpoelman@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/11 15:12:29 by vpoelman          #+#    #+#              #
-#    Updated: 2025/11/24 23:34:23 by vpoelman         ###   ########.fr        #
+#    Updated: 2025/11/25 14:28:14 by vpoelman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ OBJS = $(SRCS:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 

@@ -51,15 +51,15 @@ void	print_status(t_philo *philo, char *status)
 {
 	long long	time;
 
-	pthread_mutex_lock(&philo->data->print_mutex);
 	pthread_mutex_lock(&philo->data->death_mutex);
+	pthread_mutex_lock(&philo->data->print_mutex);
 	if (!philo->data->is_dead)
 	{
 		time = get_time() - philo->data->start_time;
 		printf("%lld %d %s\n", time, philo->id, status);
 	}
-	pthread_mutex_unlock(&philo->data->death_mutex);
 	pthread_mutex_unlock(&philo->data->print_mutex);
+	pthread_mutex_unlock(&philo->data->death_mutex);
 }
 
 void	ft_usleep(long long time)
